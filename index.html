@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <title>Bookshelf Widget</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="widget-shell" id="widgetShell">
+    <div class="top-left-controls">
+      <button class="icon-btn" id="openAchievementsBtn" aria-label="Open achievements">
+        <img src="icons/icon-achievements.svg" alt="Achievements" />
+      </button>
+    </div>
+
+    <div class="top-right-controls">
+      <button class="icon-btn" id="openAddBookBtn" aria-label="Add a book">
+        <img src="icons/icon-add-book.svg" alt="Add a book" />
+      </button>
+      <button class="icon-btn" id="openSettingsBtn" aria-label="Open settings">
+        <img src="icons/icon-settings.svg" alt="Settings" />
+      </button>
+    </div>
+
+    <div class="scale-wrap" id="scaleWrap">
+      <div class="stage">
+        <div class="header-area">
+          <div class="progress-wrap">
+            <div class="progress-track">
+              <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-percent" id="progressPercent">0%</div>
+          </div>
+
+          <div class="progress-label" id="progressLabel">0 of 0 Books Read</div>
+
+          <div class="preview-save-row">
+            <button class="save-preview-btn hidden" id="saveDecorBtn">Save Decor Placement</button>
+          </div>
+        </div>
+
+        <div class="shelves-scroll" id="shelvesScroll">
+          <div class="shelves-container" id="shelvesContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-backdrop" id="settingsBackdrop">
+    <div class="modal modal-large">
+      <div class="settings-page" id="settingsMainPage">
+        <h2>Bookshelf Settings</h2>
+        <p>Customize your reading goal, placeholder behavior, fonts, and shelf theme.</p>
+
+        <div class="modal-section">
+          <label class="label" for="goalInput">Book goal</label>
+          <input id="goalInput" type="number" min="1" step="1" placeholder="Enter your yearly goal" />
+        </div>
+
+        <div class="modal-section">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Dark mode</div>
+              <div class="toggle-help">Switch widget background between white and dark mode.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="darkModeToggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Book goal placeholders</div>
+              <div class="toggle-help">Show empty slots up to your yearly reading goal.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="placeholdersToggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Fill placeholders with shelf theme</div>
+              <div class="toggle-help">When off, placeholders are greyed out.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="fillPlaceholdersToggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-title">Placeholder numbers</div>
+              <div class="toggle-help">Show slot numbers on placeholder books.</div>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="placeholderNumbersToggle" />
+              <span class="slider"></span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-section">
+          <label class="label" for="fontModeSelect">Book font</label>
+          <select id="fontModeSelect">
+            <option value="serif">Classic Serif</option>
+            <option value="rounded">Rounded Sans</option>
+            <option value="display">Display Script</option>
+            <option value="mixed">Mixed Fonts</option>
+          </select>
+        </div>
+
+        <div class="modal-section">
+          <label class="label">Bookshelf themes</label>
+          <button class="theme-page-trigger" id="openThemesPageBtn">Choose Bookshelf Theme</button>
+          <div class="selected-theme-inline" id="selectedThemeInline">Selected theme: —</div>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn btn-primary" id="saveSettingsBtn">Save</button>
+          <button class="btn btn-secondary" id="closeSettingsBtn">Close</button>
+        </div>
+      </div>
+
+      <div class="settings-page hidden" id="settingsThemesPage">
+        <div class="themes-header">
+          <button class="back-btn" id="backToSettingsBtn" aria-label="Back to settings">←</button>
+          <h2>Bookshelf Themes</h2>
+        </div>
+        <p>Select a shelf theme. The preview shows a simplified version of the shelf colors.</p>
+
+        <div class="theme-grid" id="themeGrid"></div>
+
+        <div class="modal-actions">
+          <button class="btn btn-secondary" id="closeThemesPageBtn">Done</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add / Edit Book Modal -->
+  <div class="modal-backdrop" id="bookBackdrop">
+    <div class="modal">
+      <h2 id="bookModalTitle">Add a Book</h2>
+      <p id="bookModalSubtitle">Enter the title of the book you finished.</p>
+
+      <div class="modal-section">
+        <label class="label" for="bookTitleInput">Book title</label>
+        <input id="bookTitleInput" type="text" placeholder="Example: Fourth Wing" maxlength="80" />
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-danger hidden" id="removeBookBtn">Remove</button>
+        <button class="btn btn-primary" id="saveBookBtn">Save</button>
+        <button class="btn btn-secondary" id="closeBookBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Achievements Modal -->
+  <div class="modal-backdrop" id="achievementsBackdrop">
+    <div class="modal modal-large">
+      <h2>Achievements</h2>
+      <p>Unlock decor prizes as you read more books and decorate your shelves.</p>
+
+      <div class="achievements-progress-wrap">
+        <div class="progress-track progress-track-achievements">
+          <div class="progress-fill" id="achievementsProgressFill"></div>
+        </div>
+      </div>
+
+      <div class="achievements-stats">
+        <div class="achievement-stat">
+          <span class="stat-icon">🏆</span>
+          <span id="achievementsUnlockedText">0 Achievements Unlocked</span>
+        </div>
+        <div class="achievement-stat">
+          <span class="stat-icon">🎁</span>
+          <span id="prizesAvailableText">0 Prizes To Claim</span>
+        </div>
+      </div>
+
+      <div class="achievement-note" id="achievementNote">
+        Pick one decor item to preview on your shelf.
+      </div>
+
+      <div class="decor-grid" id="decorGrid"></div>
+      <button id="removeAllDecorBtn" class="remove-decor-btn">
+  Remove All Decor
+</button>
+
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="closeAchievementsBtn">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
